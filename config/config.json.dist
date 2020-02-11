@@ -1,0 +1,12 @@
+{
+  "keyBindings": {
+    "download": [
+      "q",
+      {
+        "key": "NumpadDecimal",
+        "type": "code"
+      }
+    ],
+    "newTab": "e"
+  }
+}

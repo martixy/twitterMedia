@@ -1,0 +1,40 @@
+{
+  "name": "twitter-media",
+  "version": "0.1.0",
+  "description": "Allows you to save images from twitter easily.",
+  "scripts": {
+    "build": "webpack --config-register esm",
+    "build-w": "webpack --watch --config-register esm --mode=development",
+    "build-dev": "webpack --config-register esm --mode=development"
+  },
+  "author": "martixy",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/file-saver": "^2.0.1",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.1.1",
+    "esm": "^3.2.25",
+    "pj2us-transformer": "^0.1.1",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  },
+  "userscript": {
+    "grant": [
+      "GM_xmlhttpRequest",
+      "GM_openInTab",
+      "GM_download",
+      "GM_info",
+      "GM_getTab",
+      "GM_saveTab",
+      "GM_getTabs"
+    ],
+    "match": [
+      "https://twitter.com/*",
+      "https://pbs.twimg.com/media/*"
+    ]
+  },
+  "dependencies": {
+    "brototype": "^0.0.6",
+    "file-saver": "^2.0.2"
+  }
+}
