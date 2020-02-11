@@ -63,3 +63,16 @@ This is a one-time step, unless you change something about the build or somehow 
 1. Make your own metadata. Good luck. (Take a look at `package.json`)
 2. Copy the code from `dist/main.js` below that.
 3. Put that in your script mannager.
+
+
+## Development
+
+Local development is the easiest option. However, there is one caveat - if you develop while webpack is watching the files, you will run into a problem where your script will refuse to run.  
+Technical explanation:
+* Twitter has very strict CSP, disallowing `unsave-eval` which is what webpack uses when watching files.
+* Tampermonkey can usually deal with this, modifying the page's CSP to allow your scripts to run.
+* But twitter has a service worker.
+* Service worker responses can't be modified by extensions (i.e. the `webRequest.onHeadersReceived` callback doesn't even fire).
+
+Workaround:  
+When in dev/watch mode with webpack, open devtools, go to Application>Service Workers - check `Bypass for network`. Keep devtools open - the setting only works then.
