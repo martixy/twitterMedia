@@ -977,6 +977,11 @@ estraverse@^4.1.0, estraverse@^4.1.1:
   resolved "https://registry.yarnpkg.com/estraverse/-/estraverse-4.3.0.tgz#398ad3f3c5a24948be7725e83d11a7de28cdbd1d"
   integrity sha512-39nnKffWz8xN1BU/2c79n9nB9HDzo0niYUqx6xyqUnyoAnQyyWpOTdZEeiCch8BBu515t4wp9ZmgVfVhn9EBpw==
 
+event-hooks-webpack-plugin@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/event-hooks-webpack-plugin/-/event-hooks-webpack-plugin-2.1.5.tgz#ed0c57d880637f32069cb75198d53a3b086d6f8d"
+  integrity sha512-flbauOg4n9R/73XlUR5/YMYT8mkpNGRP1A/zOJN6dbIFxcz46FZpV1w4cG7LrdjRrYrBOHrndpJ7Ns6XY4zn9w==
+
 events@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/events/-/events-3.1.0.tgz#84279af1b34cb75aa88bf5ff291f6d0bd9b31a59"
