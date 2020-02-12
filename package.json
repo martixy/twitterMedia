@@ -1,6 +1,6 @@
 {
   "name": "twitter-media",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Allows you to save images from twitter easily.",
   "scripts": {
     "build": "webpack --config-register esm",

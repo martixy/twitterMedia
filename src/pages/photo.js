@@ -3,8 +3,6 @@ import config from '../../config/config';
 
 const statusRegex = /https:\/\/twitter\.com\/[^\/]+\/status\/\d+$/;
 
-const imageSelector = "div[aria-modal='true'] div[aria-label='Image'] img";
-
 class PhotoPage {
     constructor(prev) {
         this.downloader = new Downloader();
@@ -82,7 +80,16 @@ function getImage() {
     return new Promise((resolve, reject) => {
         let timeoutTimer;
         let imgTimer = setInterval(() => {
-            let img = document.querySelector(imageSelector);
+            let modal = document.querySelector("div[aria-modal='true']");
+            let isMulti = modal.querySelector('ul') !== null;
+            let img;
+            if (isMulti) {
+                let ordinal = window.location.pathname.match(/.*?(.)$/)[1];
+                img = modal.querySelector(`li:nth-child(${ordinal}) div[aria-label='Image'] img`)
+            } else {
+                img = modal.querySelector("div[aria-label='Image'] img");
+            }
+
             if (img) {
                 clearInterval(imgTimer);
                 clearTimeout(timeoutTimer);

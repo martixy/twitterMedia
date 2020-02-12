@@ -14,6 +14,12 @@ class MediaPage {
             return;
         }
 
+        let cachedParent = null;
+        let pokeForParent = setInterval(async () => {
+            cachedParent = await getParentTab();
+            if (cachedParent) clearInterval(pokeForParent);
+        }, 500);
+
         this.downloader.bindKeys([
             {
                 keys: config.keyBindings.download,
@@ -23,13 +29,15 @@ class MediaPage {
                         parent = await getParentTab();
                         // console.log(parent);
                     } catch (error) {
-                        console.warn("No parent tab, unable to make compose meaningful name.");
+                        if (cachedParent) parent = cachedParent;
+                        else console.warn("No parent tab, unable to make compose meaningful name.");
                     }
 
                     url = new URL(window.location.href);
                     let ext = url.searchParams.get('format');
-                    let name = window.prompt("Image title?", "tw_" + window.location.pathname.substring(7));
-                    if (!name) name = "tw_" + window.location.pathname.substring(7);
+                    let tw_name = (parent ? "" : "tw_") + window.location.pathname.substring(7);
+                    let name = window.prompt("Image title?", tw_name);
+                    if (!name) name = tw_name;
                     let filename = `${name}.${ext}`;
                     if (parent) {
                         filename = `${parent.data.username}-tw-${parent.data.date}-${parent.data.id}-${parent.data.photoNum}-${name.replace(/ /g, '_')}.${ext}`;
