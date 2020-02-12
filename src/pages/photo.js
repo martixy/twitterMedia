@@ -37,10 +37,12 @@ class PhotoPage {
                 postData = getFeedPostData(img);
             }
         }
+        // console.log(isStatus);
+        // console.log(isHotload);
+        // console.log(postData);
         if (!isHotload && postData.err) throw new Error('Something in twitter changed, not finding main post for ' + (isStatus ? 'status' : 'feed') + ' page.');
         updateTab(bigUrl.href, postData); // Sync on every load. This allows you to sync the constructed name with image pages, which don't have any way of constructing a meaningful name.
         // Technically a minor improvement is to save only one instance of a given url and only ave the one with the most data, but meh. Too edge casey.
-        // console.log(postData);
 
 
         this.downloader.bindKeys([
@@ -130,7 +132,7 @@ function getStatusPostData() {
 
         let mainPost = document.querySelector(postSelector);
         let spans = mainPost.querySelectorAll(dateTimeSelector);
-        let datetime = spans[2].textContent;
+        let datetime = spans[1].textContent;
         date = parseDate(datetime);
         date = date.getFullYear().toString()
             + (date.getMonth() + 1).toString().padStart(2, '0')
