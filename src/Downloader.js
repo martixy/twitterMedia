@@ -21,7 +21,6 @@ class Downloader {
             async: false
         };
         options = { ...defaultOptions, ...options };
-        // ?? Note: Fetch doesn't work because images not same origin, and no CORS is sent.
         if (GM_info.downloadMode === 'native') { // Browser API does not remember folder!
             if (options.async) {
                 console.log('download: GM_download_async');

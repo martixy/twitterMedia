@@ -1,15 +1,20 @@
 import Downloader from '../Downloader'
 import config from '../../config/config';
 
-const statusRegex = /https:\/\/twitter\.com\/[^\/]+\/status\/\d+$/;
+const statusRegex = /twitter\.com\/[^\/]+\/status\/\d+$/;
 
 class PhotoPage {
     constructor(prev) {
         this.downloader = new Downloader();
+        this.underlyingPage = null; // The logic here is iffy. I.e. it can probably end up with a bad value.
     }
 
-    async load(underlyingPage) {
+    async load(prevPage) {
         let self = this;
+
+        if (prevPage && !prevPage.match(/status\/\d+\/photo/)) {
+            this.underlyingPage = prevPage;
+        }
 
         let img = await getImage();
         let bigUrl = new URL(img.src);
@@ -19,7 +24,7 @@ class PhotoPage {
         let isHotload = false;
         let isStatus = false;
         let postData = null;
-        if (underlyingPage === null) {
+        if (this.underlyingPage === null) {
             //TODO: An idea is to fetch a page with the data and parse it (e.g. /status). But fetching don't work because fucking of course - react. SSR is for chumps.
             //Only option is to load another tab with the status, which will run react's shite front-end scripts and send the data over from there. But meh. *Maybe* later.
             console.warn("This script cannot reliably handle page loads like this. This usually happens after a reload. I think they're done with the service worker? The underlying page isn't kept in localstorage or cookies or something. It also isn't loaded yet in many cases.");
@@ -30,19 +35,19 @@ class PhotoPage {
             if (!postData.err) isStatus = true;
             else postData = getFeedPostData(img);
         } else {
-            isStatus = underlyingPage.match(statusRegex) !== null;
+            console.log(this.underlyingPage);
+            isStatus = this.underlyingPage.match(statusRegex) !== null;
             if (isStatus) {
                 postData = getStatusPostData();
             } else {
                 postData = getFeedPostData(img);
             }
         }
-        // console.log(isStatus);
         // console.log(isHotload);
         // console.log(postData);
-        if (!isHotload && postData.err) throw new Error('Something in twitter changed, not finding main post for ' + (isStatus ? 'status' : 'feed') + ' page.');
+        if (!isHotload && postData.err) throw new Error('Something in twitter changed, not finding main post for ' + (isStatus ? 'STATUS' : 'FEED') + ' page.');
         updateTab(bigUrl.href, postData); // Sync on every load. This allows you to sync the constructed name with image pages, which don't have any way of constructing a meaningful name.
-        // Technically a minor improvement is to save only one instance of a given url and only ave the one with the most data, but meh. Too edge casey.
+        // Technically a minor improvement is to save only one instance of a given url and only have the one with the most data, but meh. Too edge casey.
 
 
         this.downloader.bindKeys([
@@ -118,29 +123,34 @@ function parseDate(stupidDatetime) {
     const dateRegex = /(\D{3}) (\d{1,2}), (\d{4})/
 
     let dateStr = stupidDatetime.match(dateRegex);
-    if (dateStr) {
-        return new Date(dateStr[0]);
-    }
-    throw new Error(`Could not parse post date: "${stupidDatetime}"`);
+    if (dateStr) return new Date(dateStr[0]);
+    else return null;
 }
 
 function getStatusPostData() {
     let date, err;
-    try {
-        const postSelector = "div[aria-label='Timeline: Conversation'] article";
-        const dateTimeSelector = "div>div>div[dir='auto']>span>span";
+    const postSelector = "div[aria-label='Timeline: Conversation'] article";
+    const dateTimeSelector = "div>div>div[dir='auto']>span>span";
 
+    try {
         let mainPost = document.querySelector(postSelector);
         let spans = mainPost.querySelectorAll(dateTimeSelector);
-        let datetime = spans[1].textContent;
-        date = parseDate(datetime);
-        date = date.getFullYear().toString()
-            + (date.getMonth() + 1).toString().padStart(2, '0')
-            + date.getDate().toString().padStart(2, '0');
+        for (const maybeDate of spans) {
+            if (date = parseDate(maybeDate.textContent)) {
+                break;
+            }
+        }
+        if (date) {
+            date = date.getFullYear().toString()
+                + (date.getMonth() + 1).toString().padStart(2, '0')
+                + date.getDate().toString().padStart(2, '0');
+        } else {
+            date = 'nodate';
+        }
     } catch (error) {
-        date = 'nodate';
         err = error;
     }
+
     let [, username, id, photoNum] = getUrlData();
 
     return {
@@ -189,7 +199,7 @@ function getFeedPostData(matchedImage) {
 }
 
 function getUrlData() {
-    const statusUrlRe = /\/([a-zA-Z]+)\/status\/(\d+)\/photo\/(\d)/;
+    const statusUrlRe = /\/([a-zA-Z0-9_]+)\/status\/(\d+)\/photo\/(\d)/;
     let nameParts = window.location.pathname.match(statusUrlRe);
     if (!nameParts) throw new Error("Whoops! Couldn't parse the url to make a name.");
     return nameParts;

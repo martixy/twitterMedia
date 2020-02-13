@@ -1,5 +1,6 @@
 import PhotoPage from './pages/photo'
 import MediaPage from './pages/media'
+import WebStatusPage from './pages/webStatus'
 
 class Router {
     constructor() {
@@ -16,6 +17,11 @@ class Router {
                 name: 'media',
                 test: () => window.location.href.startsWith("https://pbs.twimg.com/media"),
                 handler: MediaPage
+            },
+            {
+                name: 'web-status',
+                test: () => window.location.pathname.startsWith("/i/web/status/"),
+                handler: WebStatusPage
             }
         ];
         this.handlerRegistry = {};
@@ -37,8 +43,8 @@ class Router {
             if (route.test()) {
                 console.log(route.name);
                 // console.log("Loading", this.currentPage);
-                this.currentPageHandler = this.getCreatePageHandler(route);
-                this.currentPageHandler.load(this.prevPage);
+                this.currentPageHandler = this.getOrCreatePageHandler(route);
+                this.currentPageHandler.load(this.prevPage); //Not the best, but it works.
                 break;
             }
         }
@@ -46,7 +52,7 @@ class Router {
         // console.log(window.location);
     }
 
-    getCreatePageHandler(route, ...handlerArgs) {
+    getOrCreatePageHandler(route, ...handlerArgs) {
         if (!this.handlerRegistry[route.name]) {
             this.handlerRegistry[route.name] = new route.handler(...handlerArgs);
         }
