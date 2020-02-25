@@ -6,7 +6,7 @@ const DEBUG_cleanFilenames = true;
 class Downloader {
     constructor() {
         this.keyHandler = new KeyHandler();
-        this.keyBindings = {};
+        this.keyBindings = [];
     }
     openInNewTab(url) {
         GM_openInTab(url, {

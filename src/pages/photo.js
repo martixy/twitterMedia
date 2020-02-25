@@ -35,7 +35,7 @@ class PhotoPage {
             if (!postData.err) isStatus = true;
             else postData = getFeedPostData(img);
         } else {
-            console.log(this.underlyingPage);
+            // console.log(this.underlyingPage);
             isStatus = this.underlyingPage.match(statusRegex) !== null;
             if (isStatus) {
                 postData = getStatusPostData();
@@ -165,19 +165,22 @@ function getStatusPostData() {
 function getFeedPostData(matchedImage) {
     let date, err;
     try {
-        const feed = document.querySelector('section');
-        const haystack = feed.querySelectorAll("img[alt='Image']"); // Not an Array, so no .find() :(( Is "NodeList" instead
+        const times = document.querySelectorAll('time');
         let needle = new URL(matchedImage.src);
-        let postImg;
-        for (const hay of haystack) {
-            let hayUrl = new URL(hay.src);
-            if (hayUrl.pathname === needle.pathname) {
-                postImg = hay;
-                break;
+        let time;
+        outer: //Daily opportunity to use obscure javascript features: Labels. js GOTO. Handle with care.
+        for (const maybeTime of times) {
+            let article = maybeTime.closest('article');
+            let postImgs = article.querySelectorAll("img[alt='Image']");
+            for (const img of postImgs) {
+                let imgUrl = new URL(img.src);
+                if (imgUrl.pathname === needle.pathname) {
+                    time = maybeTime;
+                    break outer;
+                }
             }
         }
-        let post = postImg.closest('article');
-        let time = post.querySelector('time');
+
         date = new Date(time.dateTime);
         date = date.getFullYear().toString()
             + (date.getMonth() + 1).toString().padStart(2, '0')

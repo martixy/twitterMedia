@@ -9,5 +9,5 @@ function main() {
     console.log("twitter script loaded");
     const router = new Router();
     router.route();
-    setInterval(router.route.bind(router), 400); // router be light enough to run frequently, although some of the handlers are async and some are not. :)
+    setInterval(router.route, 400); // router be light enough to run frequently, besides handlers be async too
 }
