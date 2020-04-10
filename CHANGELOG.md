@@ -8,6 +8,10 @@
 &emsp;\!  Security  
 &emsp;\.  Comment  
 
+### v0.4 [20200410]
+&emsp;\~  Add handling for threaded posts.
+&emsp;\~  Improve a couple regexes.
+
 ### v0.3 [20200225]
 &emsp;\~  Adapt the script to the new twitter layout. If I did it the lazy way the first time, I wouldn't have had to. Ah well.  
 &emsp;\~  Add mode arg to prod build command so webpack stops complaining.  

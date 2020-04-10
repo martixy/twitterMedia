@@ -1,7 +1,7 @@
 import Downloader from '../Downloader'
 import config from '../../config/config';
 
-const statusRegex = /twitter\.com\/[^\/]+\/status\/\d+$/;
+const statusRegex = /twitter\.com\/[^\/]+\/status\/(\d+)$/;
 
 class PhotoPage {
     constructor(prev) {
@@ -31,16 +31,34 @@ class PhotoPage {
             isHotload = true;
         }
         if (isHotload) {
-            postData = getStatusPostData();
+            postData = getPostDataWithSpan();
             if (!postData.err) isStatus = true;
-            else postData = getFeedPostData(img);
+            else postData = getPostDataWithTime(img);
         } else {
+            // Logic on how to parse the time of the post depending on what type of page it is.
+            // 2 types of posts - where the time is in a <time> tag, or a <span> tag.
+            // <time>s contain UTC datetimes and are easy to find in the post. <span>s contain stringy datetimes we need to parse and need to be enumerated till we find the right one.
+            // S = isStatus, T = isTweet, H = hasChild, C = isChild
+            // !S = <time>
+            // S T = <time>
+            // S !T !H = <span>
+            // S !T H !C = <time>
+            // S !T !H C = <span>
+            // WolframAlpha is your friend.
+
             // console.log(this.underlyingPage);
-            isStatus = this.underlyingPage.match(statusRegex) !== null;
-            if (isStatus) {
-                postData = getStatusPostData();
+            const statusMatch = this.underlyingPage.match(statusRegex);
+            isStatus = statusMatch !== null;
+
+            let isTweetThread = document.querySelector('section>div[aria-label="Timeline: Tweet"') !== null;
+            let hasChild = !isTweetThread && document.querySelector('section>div[aria-label="Timeline: Conversation"]>div>div>div:nth-child(2)>div>article') !== null;
+            let isThreadChild = hasChild && window.location.pathname.match(/status\/(\d+)/)[1] === statusMatch[1];
+            if (isStatus && !isTweetThread && (!hasChild || isThreadChild)) {
+                console.info('span post');
+                postData = getPostDataWithSpan(isThreadChild);
             } else {
-                postData = getFeedPostData(img);
+                console.info('time post');
+                postData = getPostDataWithTime(img);
             }
         }
         // console.log(isHotload);
@@ -127,13 +145,16 @@ function parseDate(stupidDatetime) {
     else return null;
 }
 
-function getStatusPostData() {
+function getPostDataWithSpan(isThreadChild = false) {
     let date, err;
     const postSelector = "div[aria-label='Timeline: Conversation'] article";
     const dateTimeSelector = "div>div>div[dir='auto']>span>span";
 
     try {
-        let mainPost = document.querySelector(postSelector);
+        let allPosts = document.querySelectorAll(postSelector);
+        let mainPost;
+        if (isThreadChild) mainPost = allPosts[1];
+        else mainPost = allPosts[0];
         let spans = mainPost.querySelectorAll(dateTimeSelector);
         for (const maybeDate of spans) {
             if (date = parseDate(maybeDate.textContent)) {
@@ -162,7 +183,7 @@ function getStatusPostData() {
     }
 }
 
-function getFeedPostData(matchedImage) {
+function getPostDataWithTime(matchedImage) {
     let date, err;
     try {
         const times = document.querySelectorAll('time');
@@ -202,7 +223,7 @@ function getFeedPostData(matchedImage) {
 }
 
 function getUrlData() {
-    const statusUrlRe = /\/([a-zA-Z0-9_]+)\/status\/(\d+)\/photo\/(\d)/;
+    const statusUrlRe = /\/(\w+)\/status\/(\d+)\/photo\/(\d)/;
     let nameParts = window.location.pathname.match(statusUrlRe);
     if (!nameParts) throw new Error("Whoops! Couldn't parse the url to make a name.");
     return nameParts;
