@@ -64,9 +64,9 @@ class PhotoPage {
             // console.log(this.underlyingPage);
             const statusMatch = this.underlyingPage.match(statusRegex);
             isStatus = statusMatch !== null;
-            let isMain = window.location.pathname.match(/status\/(\d+)/)[1] === statusMatch[1];
+            let isMain = isStatus && window.location.pathname.match(/status\/(\d+)/)[1] === statusMatch[1];
 
-            if (isStatus && isMain) {
+            if (isMain) {
                 console.info('span post');
                 postData = getPostDataWithSpan();
             } else {

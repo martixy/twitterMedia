@@ -8,6 +8,9 @@
 &emsp;\!  Security  
 &emsp;\.  Comment  
 
+### v0.5.1 [20200906]
+&emsp;\*  Fix small oversight in tweet detection. Oops.  
+
 ### v0.5 [20200906]
 &emsp;\+  Remembers file names between multi-images. No longer will you need to copy-paste the name when saving multiple images from the same set. Yay! This works even across tabs.  
 &emsp;\~  Update dependencies.  
