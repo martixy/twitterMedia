@@ -1,4 +1,4 @@
-# Twitter Image saver v0.4
+# Twitter Image saver v0.5
 
 Userscript to make it easy to save images from twitter.  
 Way too many artists use twitter as a platform to post their art unfortunately. Have these people never heard of artstation or deviantArt?

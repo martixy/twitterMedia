@@ -139,15 +139,11 @@ function GM_dl_async(url, name, options) {
 function GM_download_emu(url, name, options) {
     let defaultOptions = {
         onerror(err) { alert("Error: " + r.statusText); },
-        ontimeout() { alert("Timeout!"); }
+        ontimeout() { alert("Timeout!"); },
+        timeout: 10000
     };
     options = { ...defaultOptions, ...options };
     name = cleanFilename(name);
-
-    const size = DeviationUtils.getImageDimensions();
-    if (size !== null && size.total > 4e+6) {
-        options.timeout = Math.ceil(size.total / 800);
-    }
 
     GM_xmlhttpRequest({
         method: 'GET',
@@ -165,15 +161,11 @@ function GM_download_emu(url, name, options) {
 function GM_download_emu_async(url, name, options) {
     let defaultOptions = {
         onerror(err) { alert("Error: " + r.statusText); },
-        ontimeout() { alert("Timeout!"); }
+        ontimeout() { alert("Timeout!"); },
+        timeout: 10000
     };
     options = { ...defaultOptions, ...options };
     name = cleanFilename(name);
-
-    const size = DeviationUtils.getImageDimensions();
-    if (size !== null && size.total > 4e+6) {
-        options.timeout = Math.ceil(size.total / 800);
-    }
 
     return new Promise(function(resolve, reject) {
         GM_xmlhttpRequest({

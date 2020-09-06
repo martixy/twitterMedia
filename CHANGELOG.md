@@ -8,8 +8,17 @@
 &emsp;\!  Security  
 &emsp;\.  Comment  
 
+### v0.5 [20200906]
+&emsp;\+  Remembers file names between multi-images. No longer will you need to copy-paste the name when saving multiple images from the same set. Yay! This works even across tabs.  
+&emsp;\~  Update dependencies.  
+&emsp;\~  Revise the tweet detection logic. A lot simpler and less error-prone now. Also fixes some edge cases.  
+&emsp;\~  Add url variant handling for image pages. There's scripts that auto-redirect to the second variant. One example being the maxurl script. This script now also opens new tabs in the new variant. Prevents the uncessary redirect when you have both scripts enabled at the same time.  
+&emsp;\*  Fix date detection after change in twitter markup.  
+&emsp;\*  Fix image detection for images that possess accessibility labels.  
+&emsp;\-  Remove some old code from the Downloader that referenced utilities not part of this project.  
+
 ### v0.4 [20200410]
-&emsp;\~  Add handling for threaded posts.
+&emsp;\~  Add handling for threaded posts.  
 &emsp;\~  Improve a couple regexes.
 
 ### v0.3 [20200225]
