@@ -54,6 +54,7 @@ class PhotoPage {
              * Feeds (i.e. !isStatus) are always times.
              * For conversation you have 1 main tweet, which is the tweet the URL points to and any number of neighbouring tweets, or maybe 1 parent and any number below...
              * In any case, the main post always seems to be a <span> while the siblings always seem to be times.
+             * ...with one exception. There seems to be a context where even main posts are <time>, when the url includes the "s" parameter.
              * 
              * S = isStatus, M = isMain
              * !S = <time>
@@ -65,8 +66,11 @@ class PhotoPage {
             const statusMatch = this.underlyingPage.match(statusRegex);
             isStatus = statusMatch !== null;
             let isMain = isStatus && window.location.pathname.match(/status\/(\d+)/)[1] === statusMatch[1];
+            let url = new URL(this.underlyingPage);
+            let sVal = url.searchParams.get('s');
+            let sContext = sVal && parseInt(sVal) >= 10 && parseInt(sVal) <= 27; //Based on empiric testing, not docs. Could be wrong.
 
-            if (isMain) {
+            if (isMain && !sContext) {
                 console.info('span post');
                 postData = getPostDataWithSpan();
             } else {

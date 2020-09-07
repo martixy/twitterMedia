@@ -41,7 +41,8 @@ class Router {
     }
 
     route() {
-        this.currentPage = getPageWithoutQueryHash();
+        // this.currentPage = getPageWithoutQueryHash();
+        this.currentPage = window.location.href;
         if (this.prevPage !== this.currentPage) {
             // console.log("Unloading", this.prevPage);
             if (this.currentPageHandler) {
