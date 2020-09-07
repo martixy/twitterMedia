@@ -30,8 +30,8 @@ TweetId = The internal/url ID of the tweet (see above), monotonically increasing
 Number = Number in sequence, I think up to 4 max?  
 Name = [Optional] A free-text name, with "_" as spaces  
 
-**IMPORTANT!** Sometimes the script can't get the date - this happens when you load a magnified view directly. To fix, just click on the image from the feed or from the individual tweet.  
-(This happens because the script relies on the underlying page to get the date. If you load the magnified view directly that data is usually missing.)
+**Note:** Sometimes the script can't get the date - this can happen when you load a magnified view directly. To fix, just click on the image from the feed or from the individual tweet.  
+(The script relies on the underlying page to get the date. If you load the magnified view directly that data may not have loaded yet, or may not load at all. The script will try, and succeed often, but not always.)
 
 
 ## Installation
