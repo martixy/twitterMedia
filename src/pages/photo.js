@@ -1,7 +1,7 @@
 import Downloader from '../Downloader'
 import config from '../../config/config';
 
-const statusRegex = /twitter\.com\/[^\/]+\/status\/(\d+)$/;
+const statusRegex = /twitter\.com\/[^\/]+\/status\/(\d+)/;
 const HOT_RELOAD_DELAY = 200; //Hot reloads are tricky, introduces a slight delay to allow the page to load. Might still fail.
 
 class PhotoPage {
@@ -70,7 +70,7 @@ class PhotoPage {
             let sVal = url.searchParams.get('s');
             let sContext = sVal && parseInt(sVal) >= 10 && parseInt(sVal) <= 27; //Based on empiric testing, not docs. Could be wrong.
 
-            if (isMain && !sContext) {
+            if (isMain /*&& !sContext*/) {
                 console.info('span post');
                 postData = getPostDataWithSpan();
             } else {

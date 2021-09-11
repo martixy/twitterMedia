@@ -8,6 +8,10 @@
 &emsp;`!`  Security  
 &emsp;`.`  Comment  
 
+### v0.5.3 [20210911]
+&emsp;`~`  Upgrade all packages  
+&emsp;`*`  Fix for changed twitter status URLs. Hopefully fix doesn't break anything else.  
+
 ### v0.5.2 [20200908]
 &emsp;`*`  Fix edge case in post detection.  
 &emsp;`~`  Changelog be more readable.  
@@ -47,4 +51,3 @@
 
 ### v0.1 Initial version [20200211]
 &emsp;`+` First release. See readme.
-
