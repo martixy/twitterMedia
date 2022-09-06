@@ -8,6 +8,11 @@
 &emsp;`!`  Security  
 &emsp;`.`  Comment  
 
+### v0.5.4 [20220906]
+&emsp;`~`  Upgrade all packages  
+&emsp;`*`  Fix date detection on span posts. Twitter finally seems to have fixed them to use <time> tags.  
+&emsp;`*`  Minor refactor.  
+
 ### v0.5.3 [20210911]
 &emsp;`~`  Upgrade all packages  
 &emsp;`*`  Fix for changed twitter status URLs. Hopefully fix doesn't break anything else.  

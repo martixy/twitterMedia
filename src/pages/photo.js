@@ -188,16 +188,10 @@ function getPostDataWithSpan(isThreadChild = false) {
         let postContainers = document.querySelectorAll(postSelector);
         let mainPost = postContainers[1].querySelector("article");
         if (!mainPost) mainPost = postContainers[0].querySelector("article");
-        let spans = mainPost.querySelectorAll(dateTimeSelector);
-        for (const maybeDate of spans) {
-            if (date = parseDate(maybeDate.textContent)) {
-                break;
-            }
-        }
+
+        date = mainPost.querySelector("time")
         if (date) {
-            date = date.getFullYear().toString()
-                + (date.getMonth() + 1).toString().padStart(2, '0')
-                + date.getDate().toString().padStart(2, '0');
+            date = formatDatetime(new Date(date.dateTime))
         } else {
             date = 'nodate';
             console.warn("Couldn't parse date. Maybe something in twitter changed? Or my logic sucks.");
@@ -236,10 +230,7 @@ function getPostDataWithTime(matchedImage) {
             }
         }
 
-        date = new Date(time.dateTime);
-        date = date.getFullYear().toString()
-            + (date.getMonth() + 1).toString().padStart(2, '0')
-            + date.getDate().toString().padStart(2, '0');
+        date = formatDatetime(new Date(time.dateTime))
     } catch (error) {
         date = 'nodate';
         err = error;
@@ -269,4 +260,11 @@ function delay(delay) {
             resolve()
         }, delay)
     });
+}
+
+// yyyymmdd
+function formatDatetime(date) {
+    return date.getFullYear().toString()
+        + (date.getMonth() + 1).toString().padStart(2, '0')
+        + date.getDate().toString().padStart(2, '0')
 }

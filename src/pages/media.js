@@ -3,7 +3,7 @@ import config from '../../config/config'
 
 const QUERY = "query";
 const PATHNAME = "pathname";
-const rePATH = /.*\/(\w+)\.(\w+)/;
+const rePATH = /.*\/([\w-]+)\.(\w+)/;
 
 class MediaPage {
     constructor() {
